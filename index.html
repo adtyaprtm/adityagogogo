@@ -940,8 +940,8 @@
 
     <script>
         /* ══════════════════════════════
-                                                                                                                                   CONFIG – ubah sesuai kebutuhan
-                                                                                                                                ═══════════════════════════════ */
+                                                                                                                                           CONFIG – ubah sesuai kebutuhan
+                                                                                                                                        ═══════════════════════════════ */
         const CONFIG = {
             name: "Irsa Sartila",
             date: "29 juni 2026",
@@ -1082,7 +1082,7 @@
             ytPlayer = new YT.Player('yt-player', {
                 height: '1',
                 width: '1',
-                videoId: 'cWWjANOisLo',
+                videoId: 'Tno8qILPDVw',
                 events: {
                     'onReady': (event) => {
                         if (!musicEnabled) playYouTubeMusic();
@@ -1191,7 +1191,7 @@
         initMusicPlayer();
 
         // Create a visible play button to guarantee a user gesture for audio.
-        (function createPlayButton(){
+        (function createPlayButton() {
             const btn = document.createElement('button');
             btn.id = 'playMusicBtn';
             btn.innerText = 'Play Music';
@@ -1206,7 +1206,11 @@
             const observer = new MutationObserver(() => {
                 if (musicEnabled) btn.style.display = 'none';
             });
-            observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+            observer.observe(document.body, {
+                attributes: true,
+                childList: true,
+                subtree: true
+            });
         })();
 
         /* ══ EFFECTS ══ */
