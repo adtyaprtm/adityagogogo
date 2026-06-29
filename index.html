@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday! 🎂</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&family=Bangers&display=swap" rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+         :root {
+            --yellow: #FFD600;
+            --yellow2: #FFF176;
+            --red: #E53935;
+            --red2: #FF6B6B;
+            --blue: #1565C0;
+            --blue2: #42A5F5;
+            --sky: #B3E5FC;
+            --white: #FFFFFF;
+            --brown: #3E2723;
+            --cream: #FFFDE7;
+            --black: #1A1A1A;
+            --outline: #000000;
+        }
+        
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background: var(--yellow);
+            font-family: 'Fredoka One', cursive;
+            overflow: hidden;
+        }
+        /* ───── SCREENS ───── */
+        
+        .screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .4s ease;
+            overflow: hidden;
+        }
+        
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        /* ─── SCREEN 1 – Intro ─── */
+        
+        #s1 {
+            background: var(--yellow);
+        }
+        /* Manga-style speed lines background */
+        
+        .speedlines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .speedlines::before {
+            content: '';
+            position: absolute;
+            inset: -100%;
+            background: repeating-conic-gradient( rgba(255, 255, 255, .12) 0deg 4deg, transparent 4deg 10deg);
+            animation: spinSlow 20s linear infinite;
+        }
+        
+        @keyframes spinSlow {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        /* Shinchan SVG face */
+        
+        .shin-face {
+            width: 180px;
+            height: 180px;
+            position: relative;
+            z-index: 2;
+            animation: bounce 1.6s ease-in-out infinite;
+            filter: drop-shadow(4px 6px 0 rgba(0, 0, 0, .25));
+        }
+        
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateY(0) rotate(-3deg);
+            }
+            50% {
+                transform: translateY(-12px) rotate(3deg);
+            }
+        }
+        
+        #s1 .greeting {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(28px, 8vw, 52px);
+            color: var(--red);
+            text-align: center;
+            letter-spacing: 3px;
+            margin-top: 16px;
+            -webkit-text-stroke: 2px var(--outline);
+            z-index: 2;
+            line-height: 1.1;
+            text-shadow: 3px 3px 0 #000;
+        }
+        
+        .tap-btn {
+            margin-top: 24px;
+            padding: 14px 36px;
+            background: var(--red);
+            color: white;
+            font-family: 'Bangers', cursive;
+            font-size: 26px;
+            letter-spacing: 3px;
+            border: 4px solid var(--outline);
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 5px 5px 0 var(--outline);
+            transition: transform .1s, box-shadow .1s;
+            animation: tapPulse 2s ease infinite;
+        }
+        
+        .tap-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 2px 2px 0 var(--outline);
+        }
+        
+        @keyframes tapPulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        /* Stars decoration */
+        
+        .deco-star {
+            position: absolute;
+            pointer-events: none;
+            font-size: 28px;
+            animation: starSpin 3s linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes starSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        /* ─── SCREEN 2 – Music ─── */
+        
+        #s2 {
+            background: linear-gradient(160deg, #0D47A1 0%, #1565C0 40%, #0A3A8B 100%);
+        }
+        
+        .note-wrap {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .fnote {
+            position: absolute;
+            top: -30px;
+            animation: floatUp 3.8s ease-in forwards;
+            opacity: 0;
+            color: var(--yellow);
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(-10deg);
+            }
+            15% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-8vh) rotate(15deg);
+            }
+        }
+        /* Shinchan dancing in s2 */
+        
+        .shin-dance {
+            width: 120px;
+            height: 120px;
+            animation: dance .5s ease-in-out infinite alternate;
+            filter: drop-shadow(3px 5px 0 rgba(0, 0, 0, .3));
+            margin-bottom: 12px;
+        }
+        
+        @keyframes dance {
+            from {
+                transform: rotate(-8deg) translateY(0);
+            }
+            to {
+                transform: rotate(8deg) translateY(-8px);
+            }
+        }
+        
+        #s2 .lbl {
+            font-size: 12px;
+            letter-spacing: 5px;
+            color: rgba(255, 255, 255, .7);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        #s2 .song-title {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(32px, 10vw, 64px);
+            color: var(--yellow);
+            text-align: center;
+            letter-spacing: 3px;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, .4);
+            line-height: 1;
+        }
+        
+        #s2 .song-title em {
+            display: block;
+            font-style: normal;
+            font-size: .55em;
+            color: rgba(255, 255, 255, .85);
+            letter-spacing: 6px;
+            margin-top: 6px;
+        }
+        
+        .bars {
+            display: flex;
+            gap: 5px;
+            margin-top: 28px;
+            align-items: flex-end;
+            height: 44px;
+        }
+        
+        .bar {
+            width: 6px;
+            border-radius: 3px;
+            background: var(--red2);
+            animation: beat .55s ease infinite alternate;
+            box-shadow: 0 0 10px rgba(229, 59, 71, .5);
+        }
+        
+        @keyframes beat {
+            from {
+                transform: scaleY(.2);
+            }
+            to {
+                transform: scaleY(1);
+            }
+        }
+        /* ─── SCREEN 3 – Happy Birthday ─── */
+        
+        #s3 {
+            background: var(--yellow);
+        }
+        
+        .conf-wrap {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .conf {
+            position: absolute;
+            top: -20px;
+            border-radius: 2px;
+            animation: confFall linear forwards;
+        }
+        
+        @keyframes confFall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(110vh) rotate(720deg);
+            }
+        }
+        
+        .love-p {
+            position: absolute;
+            top: -24px;
+            animation: loveFall linear forwards;
+        }
+        
+        @keyframes loveFall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(-10deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(110vh) rotate(20deg);
+            }
+        }
+        
+        #s3 .sub-label {
+            font-size: 13px;
+            letter-spacing: 5px;
+            color: var(--brown);
+            opacity: .65;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            z-index: 1;
+        }
+        /* Comic-style HBD block */
+        
+        #s3 .hbd-block {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        #s3 .hbd-block .hbd-text {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(54px, 18vw, 110px);
+            color: var(--white);
+            -webkit-text-stroke: 3px var(--outline);
+            text-shadow: 5px 5px 0 var(--red), 8px 8px 0 rgba(0, 0, 0, .2);
+            line-height: .9;
+            display: block;
+        }
+        
+        #s3 .hbd-block .hbd-name {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(30px, 10vw, 62px);
+            color: var(--red);
+            -webkit-text-stroke: 2px var(--outline);
+            text-shadow: 3px 3px 0 var(--outline);
+            display: block;
+            margin-top: 4px;
+        }
+        /* Cake emoji decoration */
+        
+        #s3 .cake-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            font-size: 28px;
+            z-index: 1;
+            animation: cakeWiggle 1.2s ease-in-out infinite;
+        }
+        
+        @keyframes cakeWiggle {
+            0%,
+            100% {
+                transform: rotate(-4deg);
+            }
+            50% {
+                transform: rotate(4deg);
+            }
+        }
+        
+        #s3 .bday-date {
+            margin-top: 14px;
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: var(--brown);
+            opacity: .55;
+            z-index: 1;
+        }
+        /* Shin-chan waving */
+        
+        .shin-wave {
+            width: 90px;
+            margin-top: 10px;
+            z-index: 1;
+            animation: waving .6s ease-in-out infinite alternate;
+            filter: drop-shadow(3px 4px 0 rgba(0, 0, 0, .2));
+        }
+        
+        @keyframes waving {
+            from {
+                transform: rotate(-5deg) scale(1);
+            }
+            to {
+                transform: rotate(5deg) scale(1.05);
+            }
+        }
+        /* ─── SCREEN 4 – Gallery ─── */
+        
+        #s4 {
+            background: var(--cream);
+            justify-content: flex-start;
+        }
+        
+        .gallery-header {
+            width: 100%;
+            padding: 32px 24px 14px;
+            text-align: center;
+            flex-shrink: 0;
+            background: var(--yellow);
+            border-bottom: 4px solid var(--outline);
+            position: relative;
+        }
+        
+        .gallery-header h2 {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(26px, 7vw, 42px);
+            color: var(--red);
+            letter-spacing: 3px;
+            -webkit-text-stroke: 1.5px var(--outline);
+            text-shadow: 2px 2px 0 var(--outline);
+        }
+        
+        .gallery-header p {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: var(--brown);
+            opacity: .5;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        /* Photo frame */
+        
+        .slider-area {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 56px 16px;
+            /* sides leave room for arrows */
+            position: relative;
+        }
+        
+        .photo-frame {
+            width: 100%;
+            max-width: 300px;
+            border: 5px solid var(--outline);
+            border-radius: 8px;
+            box-shadow: 6px 6px 0 var(--outline);
+            background: white;
+            overflow: hidden;
+            position: relative;
+            /* Fixed height so it doesn't depend on image ratio */
+            height: 0;
+            padding-bottom: 120%;
+            /* 5:6 aspect ratio trick */
+        }
+        
+        .photo-frame img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .photo-frame .frame-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--yellow);
+            border: 2px solid var(--outline);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 2px 2px 0 var(--outline);
+        }
+        
+        .slide {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .slide.active {
+            display: flex;
+            animation: fadeUp .4s ease both;
+        }
+        
+        .slide-caption {
+            margin-top: 12px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--brown);
+            opacity: .7;
+            text-align: center;
+        }
+        /* Arrow buttons – inside slider-area, absolutely positioned */
+        
+        .arr {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-70%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--red);
+            color: white;
+            border: 3px solid var(--outline);
+            box-shadow: 3px 3px 0 var(--outline);
+            cursor: pointer;
+            font-size: 22px;
+            font-family: 'Fredoka One', cursive;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform .1s, box-shadow .1s;
+            z-index: 10;
+        }
+        
+        .arr:active {
+            transform: translateY(-70%) translate(2px, 2px);
+            box-shadow: 1px 1px 0 var(--outline);
+        }
+        
+        .arr.prev {
+            left: 8px;
+        }
+        
+        .arr.next {
+            right: 8px;
+        }
+        
+        .photo-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 12px;
+        }
+        
+        .pdot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--outline);
+            background: var(--white);
+            cursor: pointer;
+            transition: all .25s;
+        }
+        
+        .pdot.on {
+            background: var(--red);
+            width: 24px;
+            border-radius: 5px;
+        }
+        /* ─── SCREEN 5 – Messages ─── */
+        
+        #s5 {
+            background: var(--blue);
+            justify-content: flex-start;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .msg-header {
+            width: 100%;
+            padding: 28px 20px 16px;
+            text-align: center;
+            flex-shrink: 0;
+            border-bottom: 4px solid rgba(255, 255, 255, .15);
+        }
+        
+        .msg-header h2 {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(28px, 8vw, 48px);
+            color: var(--yellow);
+            letter-spacing: 3px;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, .3);
+        }
+        
+        .msg-header p {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, .5);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        
+        .msg-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 16px 100px;
+            width: 100%;
+        }
+        
+        .msg-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        /* Comic speech bubble style */
+        
+        .card {
+            background: white;
+            border: 3px solid var(--outline);
+            border-radius: 18px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            position: relative;
+            box-shadow: 4px 4px 0 var(--outline);
+            animation: fadeUp .6s ease both;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            bottom: -14px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 14px solid var(--outline);
+        }
+        
+        .card::after {
+            content: '';
+            position: absolute;
+            left: 22px;
+            bottom: -10px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 3px solid transparent;
+            border-top: 12px solid white;
+        }
+        
+        .card p {
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--black);
+            line-height: 1.6;
+        }
+        
+        .card .from {
+            margin-top: 8px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 18px;
+            color: var(--red);
+        }
+        /* ─── GLOBAL NAV ─── */
+        
+        #nav {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 999;
+            background: rgba(0, 0, 0, .35);
+            padding: 8px 12px;
+            border-radius: 999px;
+            backdrop-filter: blur(6px);
+            border: 2px solid rgba(255, 255, 255, .2);
+        }
+        
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .45);
+            transition: all .3s;
+            cursor: pointer;
+        }
+        
+        .dot.on {
+            background: var(--yellow);
+            width: 24px;
+            border-radius: 5px;
+            box-shadow: 0 0 8px rgba(255, 214, 0, .6);
+        }
+        
+        #nxt {
+            position: fixed;
+            bottom: 64px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--red);
+            color: white;
+            border: 3px solid var(--outline);
+            box-shadow: 4px 4px 0 var(--outline);
+            cursor: pointer;
+            z-index: 999;
+            font-family: 'Fredoka One', cursive;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform .1s, box-shadow .1s;
+        }
+        
+        #nxt:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--outline);
+        }
+        
+        #nxt.dark {
+            background: var(--blue);
+        }
+        
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* hidden YT player */
+        
+        #yt-wrap {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="yt-wrap">
+        <div id="yt-player"></div>
+    </div>
+
+    <!-- ════════ S1 – INTRO ════════ -->
+    <div class="screen active" id="s1">
+        <div class="speedlines"></div>
+
+        <!-- Decorative stars -->
+        <div class="deco-star" style="top:8%;left:10%;animation-duration:4s">⭐</div>
+        <div class="deco-star" style="top:12%;right:12%;animation-duration:3s;font-size:20px">✨</div>
+        <div class="deco-star" style="bottom:20%;left:8%;animation-duration:5s;font-size:22px">💫</div>
+        <div class="deco-star" style="bottom:18%;right:10%;animation-duration:3.5s">⭐</div>
+
+        <!-- Shinchan SVG face -->
+        <svg class="shin-face" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Head -->
+    <ellipse cx="100" cy="105" rx="82" ry="78" fill="#FDDBA9" stroke="#000" stroke-width="3.5"/>
+    <!-- Hair -->
+    <ellipse cx="100" cy="45" rx="68" ry="34" fill="#2C2C2C" stroke="#000" stroke-width="2"/>
+    <rect x="32" y="45" width="136" height="28" fill="#FDDBA9"/>
+    <!-- Hair tufts -->
+    <ellipse cx="62" cy="38" rx="14" ry="18" fill="#2C2C2C" stroke="#000" stroke-width="2"/>
+    <ellipse cx="100" cy="32" rx="14" ry="18" fill="#2C2C2C" stroke="#000" stroke-width="2"/>
+    <ellipse cx="138" cy="38" rx="14" ry="18" fill="#2C2C2C" stroke="#000" stroke-width="2"/>
+    <!-- Eyebrows -->
+    <path d="M62 82 Q72 72 82 78" stroke="#2C2C2C" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M118 78 Q128 72 138 82" stroke="#2C2C2C" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <!-- Eyes -->
+    <ellipse cx="75" cy="92" rx="11" ry="9" fill="white" stroke="#000" stroke-width="2.5"/>
+    <ellipse cx="125" cy="92" rx="11" ry="9" fill="white" stroke="#000" stroke-width="2.5"/>
+    <circle cx="77" cy="93" r="5" fill="#000"/>
+    <circle cx="127" cy="93" r="5" fill="#000"/>
+    <circle cx="79" cy="90" r="2" fill="white"/>
+    <circle cx="129" cy="90" r="2" fill="white"/>
+    <!-- Nose -->
+    <ellipse cx="100" cy="110" rx="6" ry="4" fill="#F0A080" stroke="#C87060" stroke-width="1.5"/>
+    <!-- Cheeks -->
+    <circle cx="62" cy="118" r="13" fill="#FFB3B3" opacity=".55"/>
+    <circle cx="138" cy="118" r="13" fill="#FFB3B3" opacity=".55"/>
+    <!-- Big grin mouth -->
+    <path d="M70 128 Q100 152 130 128" stroke="#000" stroke-width="3" fill="white" stroke-linecap="round"/>
+    <!-- Teeth -->
+    <rect x="84" y="128" width="14" height="10" rx="2" fill="white" stroke="#ccc" stroke-width="1"/>
+    <rect x="100" y="128" width="14" height="10" rx="2" fill="white" stroke="#ccc" stroke-width="1"/>
+    <!-- Ears -->
+    <ellipse cx="18" cy="108" rx="11" ry="14" fill="#FDDBA9" stroke="#000" stroke-width="3"/>
+    <ellipse cx="182" cy="108" rx="11" ry="14" fill="#FDDBA9" stroke="#000" stroke-width="3"/>
+    <!-- Red shirt collar -->
+    <path d="M55 180 Q100 160 145 180" fill="#E53935" stroke="#000" stroke-width="2"/>
+  </svg>
+
+        <p class="greeting">HALO!<br>ADA YG ULTAH NIH~ 🎂</p>
+        <button class="tap-btn" onclick="goTo(2)">▶ BUKA HADIAH</button>
+    </div>
+
+    <!-- ════════ S2 – MUSIC ════════ -->
+    <div class="screen" id="s2">
+        <div class="note-wrap" id="noteWrap"></div>
+
+        <!-- Dancing Shinchan (simplified) -->
+        <svg class="shin-dance" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="55" rx="44" ry="42" fill="#FDDBA9" stroke="#000" stroke-width="2.5"/>
+    <ellipse cx="60" cy="24" rx="38" ry="20" fill="#2C2C2C" stroke="#000" stroke-width="1.5"/>
+    <rect x="22" y="24" width="76" height="16" fill="#FDDBA9"/>
+    <ellipse cx="40" cy="20" rx="9" ry="11" fill="#2C2C2C" stroke="#000" stroke-width="1.5"/>
+    <ellipse cx="60" cy="16" rx="9" ry="11" fill="#2C2C2C" stroke="#000" stroke-width="1.5"/>
+    <ellipse cx="80" cy="20" rx="9" ry="11" fill="#2C2C2C" stroke="#000" stroke-width="1.5"/>
+    <path d="M40 48 Q46 42 52 46" stroke="#2C2C2C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M68 46 Q74 42 80 48" stroke="#2C2C2C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="46" cy="57" rx="7" ry="6" fill="white" stroke="#000" stroke-width="2"/>
+    <ellipse cx="74" cy="57" rx="7" ry="6" fill="white" stroke="#000" stroke-width="2"/>
+    <circle cx="47" cy="58" r="3.5" fill="#000"/>
+    <circle cx="75" cy="58" r="3.5" fill="#000"/>
+    <ellipse cx="60" cy="68" rx="4" ry="3" fill="#F0A080" stroke="#C87060" stroke-width="1"/>
+    <circle cx="37" cy="72" r="8" fill="#FFB3B3" opacity=".5"/>
+    <circle cx="83" cy="72" r="8" fill="#FFB3B3" opacity=".5"/>
+    <path d="M43 80 Q60 94 77 80" stroke="#000" stroke-width="2.5" fill="white" stroke-linecap="round"/>
+    <!-- Arms up (dancing) -->
+    <line x1="16" y1="62" x2="36" y2="75" stroke="#FDDBA9" stroke-width="12" stroke-linecap="round"/>
+    <line x1="104" y1="62" x2="84" y2="75" stroke="#FDDBA9" stroke-width="12" stroke-linecap="round"/>
+    <line x1="16" y1="62" x2="36" y2="75" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="104" y1="62" x2="84" y2="75" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Body / shirt -->
+    <rect x="38" y="96" width="44" height="24" rx="6" fill="#E53935" stroke="#000" stroke-width="2"/>
+    <!-- Legs -->
+    <rect x="42" y="118" width="14" height="18" rx="4" fill="#1565C0" stroke="#000" stroke-width="2"/>
+    <rect x="64" y="118" width="14" height="18" rx="4" fill="#1565C0" stroke="#000" stroke-width="2"/>
+  </svg>
+
+        <p class="lbl">🎵 </p>
+        <h1 class="song-title">halooo<em>SHIN · CHAN</em></h1>
+        <div class="bars">
+            <div class="bar" style="height:40%;animation-delay:0s"></div>
+            <div class="bar" style="height:70%;animation-delay:.08s"></div>
+            <div class="bar" style="height:55%;animation-delay:.16s"></div>
+            <div class="bar" style="height:90%;animation-delay:.24s"></div>
+            <div class="bar" style="height:45%;animation-delay:.32s"></div>
+            <div class="bar" style="height:75%;animation-delay:.4s"></div>
+            <div class="bar" style="height:35%;animation-delay:.48s"></div>
+        </div>
+    </div>
+
+    <!-- ════════ S3 – HAPPY BIRTHDAY ════════ -->
+    <div class="screen" id="s3">
+        <div class="conf-wrap" id="confWrap"></div>
+        <div class="conf-wrap" id="loveWrap"></div>
+
+        <p class="sub-label">🎉 Hari Spesialmu!</p>
+        <div class="hbd-block">
+            <span class="hbd-text">HAPPY</span>
+            <span class="hbd-text">BIRTHDAY</span>
+            <span class="hbd-name" id="nameEl">An Nisa</span>
+        </div>
+
+        <div class="cake-row">🎂🎈🎊🎁🎈🎂</div>
+
+        <!-- Shin-chan waving -->
+        <svg class="shin-wave" viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="45" cy="40" rx="34" ry="32" fill="#FDDBA9" stroke="#000" stroke-width="2.5"/>
+    <ellipse cx="45" cy="16" rx="28" ry="15" fill="#2C2C2C" stroke="#000" stroke-width="1.5"/>
+    <rect x="17" y="16" width="56" height="13" fill="#FDDBA9"/>
+    <ellipse cx="29" cy="12" rx="7" ry="9" fill="#2C2C2C" stroke="#000" stroke-width="1.5"/>
+    <ellipse cx="45" cy="9"  rx="7" ry="9" fill="#2C2C2C" stroke="#000" stroke-width="1.5"/>
+    <ellipse cx="61" cy="12" rx="7" ry="9" fill="#2C2C2C" stroke="#000" stroke-width="1.5"/>
+    <path d="M30 35 Q35 29 40 33" stroke="#2C2C2C" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M50 33 Q55 29 60 35" stroke="#2C2C2C" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="34" cy="43" rx="5" ry="4" fill="white" stroke="#000" stroke-width="1.5"/>
+    <ellipse cx="56" cy="43" rx="5" ry="4" fill="white" stroke="#000" stroke-width="1.5"/>
+    <circle cx="35" cy="44" r="2.5" fill="#000"/>
+    <circle cx="57" cy="44" r="2.5" fill="#000"/>
+    <ellipse cx="45" cy="52" rx="3" ry="2" fill="#F0A080" stroke="#C87060" stroke-width="1"/>
+    <circle cx="28" cy="55" r="6" fill="#FFB3B3" opacity=".5"/>
+    <circle cx="62" cy="55" r="6" fill="#FFB3B3" opacity=".5"/>
+    <path d="M32 62 Q45 72 58 62" stroke="#000" stroke-width="2" fill="white" stroke-linecap="round"/>
+    <!-- Waving arm -->
+    <line x1="11" y1="42" x2="24" y2="56" stroke="#FDDBA9" stroke-width="10" stroke-linecap="round"/>
+    <line x1="11" y1="42" x2="24" y2="56" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+    <line x1="66" y1="28" x2="80" y2="14" stroke="#FDDBA9" stroke-width="10" stroke-linecap="round"/>
+    <line x1="66" y1="28" x2="80" y2="14" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+    <!-- Body -->
+    <rect x="28" y="72" width="34" height="22" rx="5" fill="#E53935" stroke="#000" stroke-width="2"/>
+    <!-- Legs -->
+    <rect x="30" y="92" width="12" height="16" rx="3" fill="#1565C0" stroke="#000" stroke-width="1.5"/>
+    <rect x="48" y="92" width="12" height="16" rx="3" fill="#1565C0" stroke="#000" stroke-width="1.5"/>
+  </svg>
+
+        <p class="bday-date" id="dateEl">5 April 2026</p>
+    </div>
+
+    <!-- ════════ S4 – GALLERY ════════ -->
+    <div class="screen" id="s4">
+        <div class="gallery-header">
+            <h2>📸 WAJAH CANTIKMU</h2>
+            <p>SELAMAT BERTAMBAH USIA</p>
+        </div>
+
+        <div class="slider-area">
+            <div id="photoTrack" style="width:100%;max-width:300px"></div>
+
+            <button class="arr prev" onclick="prevPhoto()">‹</button>
+            <button class="arr next" onclick="nextPhoto()">›</button>
+
+            <div id="photoDots" class="photo-dots"></div>
+        </div>
+    </div>
+
+    <!-- ════════ S5 – MESSAGES ════════ -->
+    <div class="screen" id="s5">
+        <div class="msg-header">
+            <h2>UNTUKMU 💛</h2>
+            <p>Dengan Cinta &amp; Doa</p>
+        </div>
+        <div class="msg-scroll" id="cardList"></div>
+    </div>
+
+    <!-- Nav + Next -->
+    <div id="nav">
+        <div class="dot on" onclick="goTo(1)"></div>
+        <div class="dot" onclick="goTo(2)"></div>
+        <div class="dot" onclick="goTo(3)"></div>
+        <div class="dot" onclick="goTo(4)"></div>
+        <div class="dot" onclick="goTo(5)"></div>
+    </div>
+    <button id="nxt" onclick="nextScreen()">›</button>
+
+    <script>
+        /* ══════════════════════════════
+                                                                           CONFIG – ubah sesuai kebutuhan
+                                                                        ═══════════════════════════════ */
+        const CONFIG = {
+            name: "Irsa Sartila",
+            date: "29 juni 2026",
+            ytVideoId: "mYOEgSwPb_A",
+            photos: [{
+                src: "https://i.imgur.com/SVmKXqf.jpg",
+                caption: "✨ Momen Indah"
+            }, {
+                src: "https://i.imgur.com/I3Dvb4M.jpg",
+                caption: "🌸 Kenangan Manis"
+            }, {
+                src: "https://i.imgur.com/of4IrlE.jpg",
+                caption: "🧡 Bersama Selalu"
+            }],
+            messages: [{
+                text: "Selamat ulang tahun! Kamu adalah sinar matahari yang menerangi hari-hari kami. Semoga kebahagiaan selalu menyertaimu.",
+                from: "💛"
+            }, {
+                text: "Di hari yang spesial ini, ketahuilah betapa berartinya dirimu. Tetaplah menjadi dirimu yang luar biasa, tulus, dan penuh kebaikan.",
+                from: "✨"
+            }, {
+                text: "Seiring bertambahnya usia, semoga kamu semakin bijaksana, semakin kuat, dan semakin penuh kasih. Dunia lebih cerah karena adanya dirimu.",
+                from: "🌸"
+            }, {
+                text: "Terima kasih untuk setiap senyum dan kebahagiaan yang kamu bagikan. Semoga setiap langkahmu selalu diberkati.",
+                from: "🎂"
+            }, {
+                text: "Selamat merayakan hari kelahiranmu. Ketahuilah bahwa kamu sangat dicintai, hari ini dan selamanya.",
+                from: "🌟"
+            }]
+        };
+
+        /* ── Init DOM ── */
+        document.getElementById('nameEl').textContent = CONFIG.name;
+        document.getElementById('dateEl').textContent = CONFIG.date;
+
+        /* ── Build Photos ── */
+        const track = document.getElementById('photoTrack');
+        const pDots = document.getElementById('photoDots');
+        CONFIG.photos.forEach((p, i) => {
+            const slide = document.createElement('div');
+            slide.className = `slide${i===0?' active':''}`;
+            slide.innerHTML = `
+    <div class="photo-frame">
+      <img src="${p.src}" alt="${p.caption}"
+           onerror="this.src='https://placehold.co/300x360/FFD600/000000?text=Foto'">
+      <div class="frame-badge">📸</div>
+    </div>
+    <p class="slide-caption">${p.caption}</p>`;
+            track.appendChild(slide);
+
+            const dot = document.createElement('div');
+            dot.className = `pdot${i===0?' on':''}`;
+            dot.onclick = () => showPhoto(i);
+            pDots.appendChild(dot);
+        });
+
+        /* ── Build Messages ── */
+        const cardList = document.getElementById('cardList');
+        CONFIG.messages.forEach((m, idx) => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.style.animationDelay = `${idx * .12}s`;
+            div.innerHTML = `<p>${m.text}</p><p class="from">${m.from}</p>`;
+            cardList.appendChild(div);
+        });
+
+        /* ══ NAVIGATION ══ */
+        let cur = 1;
+
+        function goTo(n) {
+            if (n < 1 || n > 5) return;
+            cur = n;
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('s' + n).classList.add('active');
+
+            document.querySelectorAll('#nav .dot').forEach((d, i) => {
+                d.classList.toggle('on', i === n - 1);
+            });
+
+            const nxt = document.getElementById('nxt');
+            nxt.className = n === 2 ? 'dark' : '';
+
+            if (n === 2) {
+                startMusic();
+                startNotes();
+            } else {
+                clearInterval(noteTimer);
+            }
+            if (n === 3) {
+                startEffects();
+            }
+        }
+
+        function nextScreen() {
+            cur = cur < 5 ? cur + 1 : 1;
+            goTo(cur);
+        }
+
+        /* ══ PHOTO SLIDER ══ */
+        let pIdx = 0;
+
+        function showPhoto(n) {
+            pIdx = n;
+            document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('active', i === n));
+            document.querySelectorAll('.pdot').forEach((d, i) => d.classList.toggle('on', i === n));
+        }
+
+        function nextPhoto() {
+            showPhoto((pIdx + 1) % CONFIG.photos.length);
+        }
+
+        function prevPhoto() {
+            showPhoto((pIdx - 1 + CONFIG.photos.length) % CONFIG.photos.length);
+        }
+
+        /* ══ MUSIC PLAYER ══ */
+        let audioCtx = null;
+        let musicGain = null;
+        let musicLoopTimer = null;
+        let musicEnabled = false;
+        let audioEl = null;
+
+        function ensureMusic() {
+            if (!audioCtx) {
+                const Ctx = window.AudioContext || window.webkitAudioContext;
+                if (!Ctx) return Promise.resolve();
+                audioCtx = new Ctx();
+                musicGain = audioCtx.createGain();
+                musicGain.gain.value = 0.035;
+                musicGain.connect(audioCtx.destination);
+            }
+            if (audioCtx.state === 'suspended') {
+                return audioCtx.resume();
+            }
+            return Promise.resolve();
+        }
+
+        function initMusicPlayer() {
+            audioEl = document.getElementById('bg-music');
+            document.addEventListener('pointerdown', () => {
+                startMusic();
+            }, {
+                once: true
+            });
+        }
+
+        initMusicPlayer();
+
+        function startFallbackMusic() {
+            ensureMusic().then(() => {
+                if (musicEnabled) return;
+                musicEnabled = true;
+
+                const melody = [261.63, 329.63, 392.0, 523.25, 392.0, 329.63, 261.63];
+                const dur = [0.28, 0.28, 0.3, 0.42, 0.28, 0.28, 0.5];
+
+                const playPattern = () => {
+                    const base = audioCtx.currentTime + 0.1;
+                    melody.forEach((freq, i) => {
+                        const t = base + i * 0.18;
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, t);
+                        gain.gain.setValueAtTime(0.0001, t);
+                        gain.gain.exponentialRampToValueAtTime(0.045, t + 0.03);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, t + dur[i]);
+                        osc.connect(gain);
+                        gain.connect(musicGain);
+                        osc.start(t);
+                        osc.stop(t + dur[i] + 0.03);
+                    });
+                    musicLoopTimer = setTimeout(playPattern, 1800);
+                };
+
+                playPattern();
+            });
+        }
+
+        function startMusic() {
+            if (musicEnabled) return;
+            if (!audioEl) audioEl = document.getElementById('bg-music');
+
+            if (audioEl) {
+                const playPromise = audioEl.play();
+                if (playPromise && typeof playPromise.then === 'function') {
+                    playPromise.then(() => {
+                        musicEnabled = true;
+                    }).catch(() => {
+                        startFallbackMusic();
+                    });
+                    return;
+                }
+            }
+
+            startFallbackMusic();
+        }
+
+        /* ══ EFFECTS ══ */
+        let noteTimer = null;
+
+        function startNotes() {
+            clearInterval(noteTimer);
+            const wrap = document.getElementById('noteWrap');
+            noteTimer = setInterval(() => {
+                if (cur !== 2) {
+                    clearInterval(noteTimer);
+                    return;
+                }
+                const n = document.createElement('div');
+                n.className = 'fnote';
+                n.innerText = ['♪', '♫', '🎵', '🎶', '♪', '✨'][Math.floor(Math.random() * 6)];
+                n.style.cssText = `left:${10+Math.random()*80}vw;font-size:${18+Math.random()*18}px`;
+                wrap.appendChild(n);
+                setTimeout(() => n.remove(), 3800);
+            }, 300);
+        }
+
+        function startEffects() {
+            spawnParticles();
+        }
+
+        let confTimer = null;
+
+        function spawnParticles() {
+            clearInterval(confTimer);
+            const cWrap = document.getElementById('confWrap');
+            const lWrap = document.getElementById('loveWrap');
+            // initial burst
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => spawnConf(cWrap), i * 60);
+                setTimeout(() => spawnLove(lWrap), i * 70 + 30);
+            }
+            // continuous drizzle
+            confTimer = setInterval(() => {
+                if (cur !== 3) {
+                    clearInterval(confTimer);
+                    return;
+                }
+                spawnConf(cWrap);
+                spawnLove(lWrap);
+            }, 220);
+        }
+
+        function spawnConf(wrap) {
+            const c = document.createElement('div');
+            c.className = 'conf';
+            const colors = ['#FFD600', '#E53935', '#1565C0', '#ffffff', '#FF6B6B', '#42A5F5'];
+            const dur = 2.5 + Math.random() * 2;
+            c.style.cssText = `
+    background:${colors[Math.floor(Math.random()*colors.length)]};
+    width:${5+Math.random()*8}px;height:${5+Math.random()*8}px;
+    left:${Math.random()*100}vw;
+    animation-duration:${dur}s;
+    border-radius:${Math.random()>.5?'50%':'2px'}`;
+            wrap.appendChild(c);
+            setTimeout(() => c.remove(), dur * 1000 + 200);
+        }
+
+        function spawnLove(wrap) {
+            const l = document.createElement('div');
+            l.className = 'love-p';
+            const icons = ['❤️', '💖', '💛', '💗', '💝'];
+            const dur = 3 + Math.random() * 2;
+            l.style.cssText = `
+    left:${Math.random()*90}vw;
+    font-size:${14+Math.random()*16}px;
+    animation-duration:${dur}s`;
+            l.innerText = icons[Math.floor(Math.random() * icons.length)];
+            wrap.appendChild(l);
+            setTimeout(() => l.remove(), dur * 1000 + 200);
+        }
+
+        /* ══ SWIPE ══ */
+        let tx = 0,
+            ty = 0;
+        document.addEventListener('touchstart', e => {
+            tx = e.touches[0].clientX;
+            ty = e.touches[0].clientY;
+        });
+        document.addEventListener('touchend', e => {
+            const dx = tx - e.changedTouches[0].clientX;
+            const dy = ty - e.changedTouches[0].clientY;
+            if (Math.abs(dy) > 80 && Math.abs(dx) < 50) {
+                if (dy > 0 && cur < 5) goTo(cur + 1);
+                if (dy < 0 && cur > 1) goTo(cur - 1);
+            }
+            if (cur === 4 && Math.abs(dx) > 50 && Math.abs(dy) < 50) {
+                if (dx > 0) nextPhoto();
+                else prevPhoto();
+            }
+        });
+
+        goTo(1);
+    </script>
+</body>
+
+</html>
