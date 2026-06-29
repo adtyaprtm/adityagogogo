@@ -940,8 +940,8 @@
 
     <script>
         /* ══════════════════════════════
-                                                                                                                                                   CONFIG – ubah sesuai kebutuhan
-                                                                                                                                                ═══════════════════════════════ */
+                                                                                                                                                                   CONFIG – ubah sesuai kebutuhan
+                                                                                                                                                                ═══════════════════════════════ */
         const CONFIG = {
             name: "Irsa Sartila",
             date: "29 juni 2026",
@@ -1109,6 +1109,12 @@
             try {
                 ytPlayer.playVideo();
                 ytPlayer.setVolume(50);
+                // If fallback is playing, reduce its volume so YT audio is primary
+                if (musicGain) {
+                    try {
+                        musicGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+                    } catch (e) {}
+                }
                 musicEnabled = true;
             } catch (e) {
                 ytFailed = true;
@@ -1161,26 +1167,35 @@
 
         function startMusic() {
             if (musicEnabled) return;
-            if (ytReady && ytPlayer) {
-                playYouTubeMusic();
-                return;
-            }
+            // Start fallback immediately to guarantee sound after a user gesture
+            startFallbackMusic();
 
-            // Try loading YouTube, but fall back quickly if blocked/unavailable.
+            // Start trying to load/play YouTube; if it succeeds, mute fallback.
             if (!ytFailed) {
                 loadYouTubeApi();
-                // If YT doesn't become ready within 1500ms, assume blocked and fallback.
-                setTimeout(() => {
-                    if (!ytReady && !ytFailed && !musicEnabled) {
-                        ytFailed = true;
-                        startFallbackMusic();
-                    }
-                }, 1500);
-                return;
             }
 
-            // If YT already marked failed, use fallback immediately.
-            startFallbackMusic();
+            // Retry playing YouTube every 10s up to 12 attempts
+            let attempts = 0;
+            const maxAttempts = 12;
+            const retryInterval = setInterval(() => {
+                attempts++;
+                if (ytReady && ytPlayer) {
+                    try {
+                        playYouTubeMusic();
+                        // if started, stop retrying
+                        if (musicEnabled) clearInterval(retryInterval);
+                    } catch (e) {
+                        // ignore and continue retrying
+                    }
+                } else {
+                    loadYouTubeApi();
+                }
+                if (attempts >= maxAttempts) {
+                    clearInterval(retryInterval);
+                    ytFailed = true;
+                }
+            }, 10000);
         }
 
         function initMusicPlayer() {
@@ -1216,28 +1231,31 @@
                 subtree: true
             });
         })();
-        
-            // Lightweight overlay shown when autoplay is blocked on music tab
-            function showMusicOverlay() {
-                if (document.getElementById('musicOverlay')) return;
-                const ov = document.createElement('div');
-                ov.id = 'musicOverlay';
-                ov.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9998;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px)';
-                ov.innerHTML = `<div style="background:#fff;padding:18px;border-radius:12px;text-align:center;max-width:320px"><p style="margin:0 0 12px;font-weight:700">Tap to enable music</p><button id="musicOverlayBtn" style="padding:10px 14px;border-radius:8px;background:#ff6b6b;color:#fff;border:0;font-weight:700">Play</button></div>`;
-                document.body.appendChild(ov);
-                const btn = document.getElementById('musicOverlayBtn');
-                btn.addEventListener('click', () => {
-                    startMusic();
+
+        // Lightweight overlay shown when autoplay is blocked on music tab
+        function showMusicOverlay() {
+            if (document.getElementById('musicOverlay')) return;
+            const ov = document.createElement('div');
+            ov.id = 'musicOverlay';
+            ov.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9998;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px)';
+            ov.innerHTML = `<div style="background:#fff;padding:18px;border-radius:12px;text-align:center;max-width:320px"><p style="margin:0 0 12px;font-weight:700">Tap to enable music</p><button id="musicOverlayBtn" style="padding:10px 14px;border-radius:8px;background:#ff6b6b;color:#fff;border:0;font-weight:700">Play</button></div>`;
+            document.body.appendChild(ov);
+            const btn = document.getElementById('musicOverlayBtn');
+            btn.addEventListener('click', () => {
+                startMusic();
+                ov.remove();
+            });
+            const obs = new MutationObserver(() => {
+                if (musicEnabled) {
                     ov.remove();
-                });
-                const obs = new MutationObserver(() => {
-                    if (musicEnabled) {
-                        ov.remove();
-                        obs.disconnect();
-                    }
-                });
-                obs.observe(document.body, { childList: true, subtree: true });
-            }
+                    obs.disconnect();
+                }
+            });
+            obs.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
 
         /* ══ EFFECTS ══ */
         let noteTimer = null;
