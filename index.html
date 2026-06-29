@@ -940,8 +940,8 @@
 
     <script>
         /* ══════════════════════════════
-                                                                                                                                           CONFIG – ubah sesuai kebutuhan
-                                                                                                                                        ═══════════════════════════════ */
+                                                                                                                                                   CONFIG – ubah sesuai kebutuhan
+                                                                                                                                                ═══════════════════════════════ */
         const CONFIG = {
             name: "Irsa Sartila",
             date: "29 juni 2026",
@@ -1028,6 +1028,10 @@
             if (n === 2) {
                 startMusic();
                 startNotes();
+                // If autoplay blocked, show a lightweight overlay to request a tap
+                setTimeout(() => {
+                    if (!musicEnabled) showMusicOverlay();
+                }, 600);
             } else {
                 clearInterval(noteTimer);
             }
@@ -1212,6 +1216,28 @@
                 subtree: true
             });
         })();
+        
+            // Lightweight overlay shown when autoplay is blocked on music tab
+            function showMusicOverlay() {
+                if (document.getElementById('musicOverlay')) return;
+                const ov = document.createElement('div');
+                ov.id = 'musicOverlay';
+                ov.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9998;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px)';
+                ov.innerHTML = `<div style="background:#fff;padding:18px;border-radius:12px;text-align:center;max-width:320px"><p style="margin:0 0 12px;font-weight:700">Tap to enable music</p><button id="musicOverlayBtn" style="padding:10px 14px;border-radius:8px;background:#ff6b6b;color:#fff;border:0;font-weight:700">Play</button></div>`;
+                document.body.appendChild(ov);
+                const btn = document.getElementById('musicOverlayBtn');
+                btn.addEventListener('click', () => {
+                    startMusic();
+                    ov.remove();
+                });
+                const obs = new MutationObserver(() => {
+                    if (musicEnabled) {
+                        ov.remove();
+                        obs.disconnect();
+                    }
+                });
+                obs.observe(document.body, { childList: true, subtree: true });
+            }
 
         /* ══ EFFECTS ══ */
         let noteTimer = null;
