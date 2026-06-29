@@ -1159,11 +1159,24 @@
             if (musicEnabled) return;
             if (ytReady && ytPlayer) {
                 playYouTubeMusic();
-            } else if (!ytFailed) {
-                loadYouTubeApi();
-            } else {
-                startFallbackMusic();
+                return;
             }
+
+            // Try loading YouTube, but fall back quickly if blocked/unavailable.
+            if (!ytFailed) {
+                loadYouTubeApi();
+                // If YT doesn't become ready within 1500ms, assume blocked and fallback.
+                setTimeout(() => {
+                    if (!ytReady && !ytFailed && !musicEnabled) {
+                        ytFailed = true;
+                        startFallbackMusic();
+                    }
+                }, 1500);
+                return;
+            }
+
+            // If YT already marked failed, use fallback immediately.
+            startFallbackMusic();
         }
 
         function initMusicPlayer() {
@@ -1176,6 +1189,25 @@
         }
 
         initMusicPlayer();
+
+        // Create a visible play button to guarantee a user gesture for audio.
+        (function createPlayButton(){
+            const btn = document.createElement('button');
+            btn.id = 'playMusicBtn';
+            btn.innerText = 'Play Music';
+            btn.style.cssText = 'position:fixed;left:16px;bottom:16px;padding:10px 14px;border-radius:8px;background:#ff6b6b;color:#fff;border:0;z-index:9999;box-shadow:0 6px 18px rgba(0,0,0,0.2);font-weight:700;cursor:pointer';
+            btn.addEventListener('click', () => {
+                startMusic();
+                btn.style.display = 'none';
+            });
+            document.body.appendChild(btn);
+
+            // Hide button automatically once music starts
+            const observer = new MutationObserver(() => {
+                if (musicEnabled) btn.style.display = 'none';
+            });
+            observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+        })();
 
         /* ══ EFFECTS ══ */
         let noteTimer = null;
