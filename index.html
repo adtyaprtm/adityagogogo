@@ -940,8 +940,8 @@
 
     <script>
         /* ══════════════════════════════
-                                                                                   CONFIG – ubah sesuai kebutuhan
-                                                                                ═══════════════════════════════ */
+                                                                                                                           CONFIG – ubah sesuai kebutuhan
+                                                                                                                        ═══════════════════════════════ */
         const CONFIG = {
             name: "Irsa Sartila",
             date: "29 juni 2026",
@@ -1058,12 +1058,59 @@
             showPhoto((pIdx - 1 + CONFIG.photos.length) % CONFIG.photos.length);
         }
 
-        /* ══ MUSIC PLAYER ══ */
+        /* ══ MUSIC PLAYER – YOUTUBE ══ */
+        let ytPlayer = null;
+        let ytReady = false;
+        let ytFailed = false;
+        let musicEnabled = false;
         let audioCtx = null;
         let musicGain = null;
         let musicLoopTimer = null;
-        let musicEnabled = false;
-        let audioEl = null;
+
+        function loadYouTubeApi() {
+            if (window.YT && window.YT.Player) {
+                window.onYouTubeIframeAPIReady();
+                return;
+            }
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(tag);
+        }
+
+        window.onYouTubeIframeAPIReady = () => {
+            ytReady = true;
+            ytPlayer = new YT.Player('yt-player', {
+                height: '1',
+                width: '1',
+                videoId: 'mYOEgSwPb_A',
+                events: {
+                    'onReady': (event) => {
+                        if (!musicEnabled) playYouTubeMusic();
+                    },
+                    'onError': (event) => {
+                        ytFailed = true;
+                        startFallbackMusic();
+                    },
+                    'onStateChange': (event) => {
+                        if (event.data === YT.PlayerState.ENDED) {
+                            ytPlayer.playVideo();
+                        }
+                    }
+                }
+            });
+        };
+
+        function playYouTubeMusic() {
+            if (!ytReady || !ytPlayer) return;
+            try {
+                ytPlayer.playVideo();
+                ytPlayer.setVolume(50);
+                musicEnabled = true;
+            } catch (e) {
+                ytFailed = true;
+                startFallbackMusic();
+            }
+        }
 
         function ensureMusic() {
             if (!audioCtx) {
@@ -1071,7 +1118,7 @@
                 if (!Ctx) return Promise.resolve();
                 audioCtx = new Ctx();
                 musicGain = audioCtx.createGain();
-                musicGain.gain.value = 0.035;
+                musicGain.gain.value = 0.18;
                 musicGain.connect(audioCtx.destination);
             }
             if (audioCtx.state === 'suspended') {
@@ -1080,8 +1127,47 @@
             return Promise.resolve();
         }
 
+        function startFallbackMusic() {
+            if (musicEnabled) return;
+            ensureMusic().then(() => {
+                musicEnabled = true;
+                const melody = [261.63, 329.63, 392.0, 523.25, 392.0, 329.63, 261.63];
+                const dur = [0.28, 0.28, 0.3, 0.42, 0.28, 0.28, 0.5];
+                const playPattern = () => {
+                    const base = audioCtx.currentTime + 0.1;
+                    melody.forEach((freq, i) => {
+                        const t = base + i * 0.2;
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(freq, t);
+                        gain.gain.setValueAtTime(0.01, t);
+                        gain.gain.exponentialRampToValueAtTime(0.26, t + 0.04);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, t + dur[i]);
+                        osc.connect(gain);
+                        gain.connect(musicGain);
+                        osc.start(t);
+                        osc.stop(t + dur[i] + 0.04);
+                    });
+                    musicLoopTimer = setTimeout(playPattern, 1700);
+                };
+                playPattern();
+            });
+        }
+
+        function startMusic() {
+            if (musicEnabled) return;
+            if (ytReady && ytPlayer) {
+                playYouTubeMusic();
+            } else if (!ytFailed) {
+                loadYouTubeApi();
+            } else {
+                startFallbackMusic();
+            }
+        }
+
         function initMusicPlayer() {
-            audioEl = document.getElementById('bg-music');
+            loadYouTubeApi();
             document.addEventListener('pointerdown', () => {
                 startMusic();
             }, {
@@ -1090,56 +1176,6 @@
         }
 
         initMusicPlayer();
-
-        function startFallbackMusic() {
-            ensureMusic().then(() => {
-                if (musicEnabled) return;
-                musicEnabled = true;
-
-                const melody = [261.63, 329.63, 392.0, 523.25, 392.0, 329.63, 261.63];
-                const dur = [0.28, 0.28, 0.3, 0.42, 0.28, 0.28, 0.5];
-
-                const playPattern = () => {
-                    const base = audioCtx.currentTime + 0.1;
-                    melody.forEach((freq, i) => {
-                        const t = base + i * 0.18;
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.type = 'triangle';
-                        osc.frequency.setValueAtTime(freq, t);
-                        gain.gain.setValueAtTime(0.0001, t);
-                        gain.gain.exponentialRampToValueAtTime(0.045, t + 0.03);
-                        gain.gain.exponentialRampToValueAtTime(0.0001, t + dur[i]);
-                        osc.connect(gain);
-                        gain.connect(musicGain);
-                        osc.start(t);
-                        osc.stop(t + dur[i] + 0.03);
-                    });
-                    musicLoopTimer = setTimeout(playPattern, 1800);
-                };
-
-                playPattern();
-            });
-        }
-
-        function startMusic() {
-            if (musicEnabled) return;
-            if (!audioEl) audioEl = document.getElementById('bg-music');
-
-            if (audioEl) {
-                const playPromise = audioEl.play();
-                if (playPromise && typeof playPromise.then === 'function') {
-                    playPromise.then(() => {
-                        musicEnabled = true;
-                    }).catch(() => {
-                        startFallbackMusic();
-                    });
-                    return;
-                }
-            }
-
-            startFallbackMusic();
-        }
 
         /* ══ EFFECTS ══ */
         let noteTimer = null;
